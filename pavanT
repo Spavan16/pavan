@@ -1,1 +1,540 @@
+/* for 2
+#include <stdio.h>
+#include <stdlib.h>
+
+// Define the hash table node structure
+typedef struct {
+    int key;    // Value in the nums array
+    int value;  // Index of the value
+} HashNode;
+
+// Function to create a hash table
+HashNode* createHashTable(int size) {
+    HashNode* hashTable = (HashNode*)malloc(size * sizeof(HashNode));
+    for (int i = 0; i < size; i++) {
+        hashTable[i].key = -1;   // Initialize keys to -1 (indicating empty slots)
+        hashTable[i].value = -1;
+    }
+    return hashTable;
+}
+
+// Hash function
+int hash(int key, int size) {
+    return abs(key) % size;
+}
+
+// Function to insert into the hash table
+void insert(HashNode* hashTable, int size, int key, int value) {
+    int index = hash(key, size);
+    while (hashTable[index].key != -1) {
+        index = (index + 1) % size;  // Linear probing
+    }
+    hashTable[index].key = key;
+    hashTable[index].value = value;
+}
+
+// Function to search in the hash table
+int search(HashNode* hashTable, int size, int key) {
+    int index = hash(key, size);
+    while (hashTable[index].key != -1) {
+        if (hashTable[index].key == key) {
+            return hashTable[index].value;
+        }
+        index = (index + 1) % size;
+    }
+    return -1;  // Not found
+}
+
+// Function to find two indices that add up to the target
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+    int hashTableSize = numsSize * 2;  // Larger size for fewer collisions
+    HashNode* hashTable = createHashTable(hashTableSize);
+    int* result = (int*)malloc(2 * sizeof(int));
+    
+    for (int i = 0; i < numsSize; i++) {
+        int complement = target - nums[i];
+        int complementIndex = search(hashTable, hashTableSize, complement);
+        if (complementIndex != -1) {
+            result[0] = complementIndex;
+            result[1] = i;
+            *returnSize = 2;
+            free(hashTable);  // Free the hash table
+            return result;
+        }
+        insert(hashTable, hashTableSize, nums[i], i);
+    }
+    
+    free(hashTable);  // Free the hash table
+    *returnSize = 0;  // If no solution is found (shouldn't happen per problem constraints)
+    return NULL;
+}
+
+
+#include <stdbool.h>
+
+bool isPalindrome(int x) {
+    if (x < 0 || (x % 10 == 0 && x != 0)) {
+        return false;
+    }
+
+    int reversed = 0;
+
+    while (x > reversed) {
+        int digit = x % 10;
+
+        // Check for overflow before multiplying or adding
+        if (reversed > (INT_MAX - digit) / 10) {
+            return false; // Overflow, cannot be a palindrome
+        }
+
+        reversed = reversed * 10 + digit;
+        x /= 10;
+    }
+
+    // Check if the number is a palindrome
+    return (x == reversed || x == reversed / 10);
+}
+
+
+int romanToInt(char *s) {
+    int total = 0;
+    int prevValue = 0;
+
+    while (*s) {
+        int currentValue;
+
+        // Determine the value of the current Roman numeral
+        switch (*s) {
+            case 'I': currentValue = 1; break;
+            case 'V': currentValue = 5; break;
+            case 'X': currentValue = 10; break;
+            case 'L': currentValue = 50; break;
+            case 'C': currentValue = 100; break;
+            case 'D': currentValue = 500; break;
+            case 'M': currentValue = 1000; break;
+            default: currentValue = 0; break;
+        }
+
+        // If the current value is greater than the previous value, subtract twice the previous value
+        if (currentValue > prevValue) {
+            total += currentValue - 2 * prevValue;
+        } else {
+            total += currentValue;
+        }
+
+        prevValue = currentValue;
+        s++;
+    }
+
+    return total;
+}
+int romanToInt(char *s) {
+    int total = 0;
+    int prevValue = 0;
+
+    while (*s) {
+        int currentValue;
+
+        // Determine the value of the current Roman numeral
+        switch (*s) {
+            case 'I': currentValue = 1; break;
+            case 'V': currentValue = 5; break;
+            case 'X': currentValue = 10; break;
+            case 'L': currentValue = 50; break;
+            case 'C': currentValue = 100; break;
+            case 'D': currentValue = 500; break;
+            case 'M': currentValue = 1000; break;
+            default: currentValue = 0; break;
+        }
+
+        // If the current value is greater than the previous value, subtract twice the previous value
+        if (currentValue > prevValue) {
+            total += currentValue - 2 * prevValue;
+        } else {
+            total += currentValue;
+        }
+
+        prevValue = currentValue;
+        s++;
+    }
+
+    return total;
+}
+int romanToInt(char *s) {
+    int total = 0;
+    int prevValue = 0;
+
+    while (*s) {
+        int currentValue;
+
+        // Determine the value of the current Roman numeral
+        switch (*s) {
+            case 'I': currentValue = 1; break;
+            case 'V': currentValue = 5; break;
+            case 'X': currentValue = 10; break;
+            case 'L': currentValue = 50; break;
+            case 'C': currentValue = 100; break;
+            case 'D': currentValue = 500; break;
+            case 'M': currentValue = 1000; break;
+            default: currentValue = 0; break;
+        }
+
+        // If the current value is greater than the previous value, subtract twice the previous value
+        if (currentValue > prevValue) {
+            total += currentValue - 2 * prevValue;
+        } else {
+            total += currentValue;
+        }
+
+        prevValue = currentValue;
+        s++;
+    }
+
+    return total;
+}
+
+
+
+
+
+
+#include <string.h>
+
+char* longestCommonPrefix(char** strs, int strsSize) {
+    if (strsSize == 0) {
+        return "";
+    }
+
+    // Start with the first string as the prefix
+    char* prefix = strs[0];
+
+    for (int i = 1; i < strsSize; i++) {
+        int j = 0;
+
+        // Compare characters of the current prefix and the current string
+        while (prefix[j] && strs[i][j] && prefix[j] == strs[i][j]) {
+            j++;
+        }
+
+        // Truncate the prefix to the matched portion
+        prefix[j] = '\0';
+
+        // If the prefix becomes empty, no common prefix exists
+        if (prefix[0] == '\0') {
+            return "";
+        }
+    }
+
+    return prefix;
+}
+
+
+
+
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+
+bool isValid(char *s) {
+    int n = strlen(s);
+    if (n % 2 != 0) {
+        return false; // Odd length strings cannot be valid
+    }
+
+    // Stack to store open brackets
+    char *stack = (char *)malloc(n * sizeof(char));
+    int top = -1;
+
+    for (int i = 0; i < n; i++) {
+        char ch = s[i];
+
+        // Push open brackets onto the stack
+        if (ch == '(' || ch == '{' || ch == '[') {
+            stack[++top] = ch;
+        } else {
+            // Check if the stack is empty (no matching open bracket)
+            if (top == -1) {
+                free(stack);
+                return false;
+            }
+
+            // Pop the top element and check for a match
+            char topChar = stack[top--];
+            if ((ch == ')' && topChar != '(') ||
+                (ch == '}' && topChar != '{') ||
+                (ch == ']' && topChar != '[')) {
+                free(stack);
+                return false;
+            }
+        }
+    }
+
+    // If the stack is empty, all brackets were matched
+    bool result = (top == -1);
+    free(stack);
+    return result;
+}
+
+
+
+#include <stdio.h>
+#include <stdlib.h>
+
+// Definition for singly-linked list.
+struct ListNode {
+    int val;
+    struct ListNode *next;
+};
+
+// Function to merge two sorted linked lists
+struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
+    // Create a new dummy node to serve as the start of the merged list
+    struct ListNode* dummy = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* current = dummy;
+
+    // Traverse both lists and merge them
+    while (list1 != NULL && list2 != NULL) {
+        if (list1->val < list2->val) {
+            current->next = list1;
+            list1 = list1->next;
+        } else {
+            current->next = list2;
+            list2 = list2->next;
+        }
+        current = current->next;
+    }
+
+    // If there are any remaining nodes in either list, append them
+    if (list1 != NULL) {
+        current->next = list1;
+    } else {
+        current->next = list2;
+    }
+
+    // Return the merged list starting from the next node of dummy
+    struct ListNode* mergedHead = dummy->next;
+    free(dummy);
+    return mergedHead;
+}
+
+// Helper function to print the list (for testing purposes)
+void printList(struct ListNode* head) {
+    while (head != NULL) {
+        printf("%d ", head->val);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+
+
+
+// Function to merge two sorted linked lists
+struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
+    // Create a new dummy node to serve as the start of the merged list
+    struct ListNode* dummy = (struct ListNode*)malloc(sizeof(struct ListNode));
+    struct ListNode* current = dummy;
+
+    // Traverse both lists and merge them
+    while (list1 != NULL && list2 != NULL) {
+        if (list1->val < list2->val) {
+            current->next = list1;
+            list1 = list1->next;
+        } else {
+            current->next = list2;
+            list2 = list2->next;
+        }
+        current = current->next;
+    }
+
+    // If there are any remaining nodes in either list, append them
+    if (list1 != NULL) {
+        current->next = list1;
+    } else {
+        current->next = list2;
+    }
+
+    // Return the merged list starting from the next node of dummy
+    struct ListNode* mergedHead = dummy->next;
+    free(dummy);
+    return mergedHead;
+}
+
+
+
+
+#include <stdio.h>
+
+int removeDuplicates(int* nums, int numsSize) {
+    if (numsSize == 0) {
+        return 0; // No elements to process
+    }
+
+    int uniqueIndex = 1; // Start at the second element
+
+    // Iterate through the array, comparing each element with the previous one
+    for (int i = 1; i < numsSize; i++) {
+        if (nums[i] != nums[i - 1]) {
+            nums[uniqueIndex] = nums[i]; // Update the next unique index
+            uniqueIndex++;
+        }
+    }
+
+    return uniqueIndex; // The number of unique elements
+}
+
+
+
+#include <stdio.h>
+
+int removeElement(int* nums, int numsSize, int val) {
+    int k = 0;  // Variable to store the count of elements not equal to val
+
+    // Traverse through the array
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] != val) {
+            nums[k] = nums[i];  // Place the element at the current index k
+            k++;  // Increment the count of valid elements
+        }
+    }
+
+    return k;  // Return the count of elements that are not equal to val
+}
+
+
+
+#include <stdio.h>
+#include <string.h>
+
+int strStr(char* haystack, char* needle) {
+    // If needle is an empty string, return 0 as per the problem statement
+    if (*needle == '\0') {
+        return 0;
+    }
+
+    int haystackLen = strlen(haystack);
+    int needleLen = strlen(needle);
+
+    // If needle is longer than haystack, it cannot be found
+    if (needleLen > haystackLen) {
+        return -1;
+    }
+
+    // Iterate over the haystack and compare substring with needle
+    for (int i = 0; i <= haystackLen - needleLen; i++) {
+        // Compare the current substring with needle
+        if (strncmp(haystack + i, needle, needleLen) == 0) {
+            return i;  // Found the needle at index i
+        }
+    }
+
+    return -1;  // Needle not found
+}
+
+
+#include <stdio.h>
+
+int searchInsert(int* nums, int numsSize, int target) {
+    int left = 0, right = numsSize - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) {
+            return mid;
+        } else if (nums[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    return left;
+}
+
+
+
+#include <stdio.h>
+
+int searchInsert(int* nums, int numsSize, int target) {
+    int left = 0, right = numsSize - 1;
+
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) {
+            return mid;
+        } else if (nums[mid] < target) {
+            left = mid + 1;
+        } else {
+            right = mid - 1;
+        }
+    }
+
+    return left;
+}
+
+
+#include <stdio.h>
+#include <string.h>
+
+int lengthOfLastWord(char* s) {
+    int length = 0;
+    int i = strlen(s) - 1;
+
+    while (i >= 0 && s[i] == ' ') {
+        i--;
+    }
+
+    while (i >= 0 && s[i] != ' ') {
+        length++;
+        i--;
+    }
+
+    return length;
+}
+
+
+#include <stdio.h>
+
+int* plusOne(int* digits, int digitsSize, int* returnSize) {
+    int carry = 1; // Start with the increment of 1
+    for (int i = digitsSize - 1; i >= 0; i--) {
+        digits[i] += carry;
+        if (digits[i] == 10) {
+            digits[i] = 0;
+            carry = 1; // Carry over to the next digit
+        } else {
+            carry = 0; // No carry needed
+            break;
+        }
+    }
+
+    // If carry is still 1, add a new digit at the beginning
+    if (carry == 1) {
+        *returnSize = digitsSize + 1;
+        int* result = (int*)malloc(*returnSize * sizeof(int));
+        result[0] = 1;
+        for (int i = 1; i < *returnSize; i++) {
+            result[i] = digits[i - 1];
+        }
+        return result;
+    } else {
+        *returnSize = digitsSize;
+        return digits;
+    }
+}
+
+int main() {
+    int digits[] = {9, 9, 9};
+    int size_1 = sizeof(digits) / sizeof(digits[0]);
+    int ret_size;
+    int* ret = plusOne(digits, size_1, &ret_size);
+
+    for (int i = 0; i < ret_size; i++) {
+        printf("%d ", ret[i]);
+    }
+
+    free(ret);  // Free the dynamically allocated memory if a new array is created
+
+    return 0;
+}
 
